@@ -1,5 +1,5 @@
 
-@baseUrl = http://localhost:1231/user
+@baseUrl = http://localhost:6000/api/v1/user
 
 ###
 GET {{baseUrl}} HTTP/1.1

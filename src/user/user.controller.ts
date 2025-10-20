@@ -9,11 +9,9 @@ export class UserController {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
-  @Post()
-  async createUser(@Body() body: CreateUserDto) {
-    const users = await this.userModel.find({}).lean();
-    console.log(users.length, 'users');
 
+  @Post()
+  createUser(@Body() body: CreateUserDto) {
     return 'hi world' + body.username;
   }
 }
