@@ -48,21 +48,25 @@ export class ResponseInterceptor<T> implements NestInterceptor<T> {
     });
   }
 
+  private getErrorMessage(error: HttpException) {
+    const response = error.getResponse();
+
+    if (typeof response === 'string') return response;
+    return 'message' in response ? response.message : 'Something went wrong';
+  }
+
   errorHandler(err: any, res: FastifyReply, req: FastifyRequest) {
     const error =
       err instanceof HttpException ? err : new InternalServerErrorException();
 
     const response = {
       success: false,
-      message: error.message,
+      message: this.getErrorMessage(error),
     };
 
     this.writeLog(req, res, response, err);
 
-    res.status(error.getStatus()).send({
-      success: false,
-      message: error.message,
-    });
+    res.status(error.getStatus()).send(response);
   }
 
   private responseHandler(
@@ -70,6 +74,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T> {
     res: FastifyReply,
     req: FastifyRequest,
   ) {
+    console.log('hihihihi');
     this.writeLog(req, res, data);
 
     return {

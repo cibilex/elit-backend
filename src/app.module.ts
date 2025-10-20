@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validateENV } from './utils/validate-env';
 import { MongooseModule } from '@nestjs/mongoose';
 import { IEnvironment } from './types/global';
-import { UserModule } from './user/user.module';
+import { V1Module } from './v1/v1.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { UserModule } from './user/user.module';
       },
       inject: [ConfigService],
     }),
-    UserModule,
+    V1Module,
   ],
 })
 export class AppModule {}
