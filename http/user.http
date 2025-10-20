@@ -1,0 +1,5 @@
+
+@baseUrl = http://localhost:1231/user
+
+###
+GET {{baseUrl}} HTTP/1.1
