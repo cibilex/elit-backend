@@ -1,8 +1,16 @@
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsNumber, Max, Min, validateSync } from 'class-validator';
+import {
+  IsEnum,
+  IsNumber,
+  IsString,
+  Max,
+  Min,
+  MinLength,
+  validateSync,
+} from 'class-validator';
 import { AppModes } from 'src/types/global';
 
-export class EnvironmentVariables {
+class EnvironmentVariables {
   @IsEnum(AppModes)
   NODE_ENV: AppModes;
 
@@ -10,6 +18,14 @@ export class EnvironmentVariables {
   @Min(0)
   @Max(65535)
   PORT: number;
+
+  @IsString()
+  @MinLength(10)
+  DB_URL: string;
+
+  @IsString()
+  @MinLength(2)
+  DB_NAME: string;
 }
 
 export function validateENV(config: Record<string, unknown>) {
@@ -23,5 +39,12 @@ export function validateENV(config: Record<string, unknown>) {
   if (errors.length > 0) {
     throw new Error(errors.toString());
   }
-  return validatedConfig;
+
+  const { NODE_ENV, PORT, DB_URL, DB_NAME } = validatedConfig;
+  return {
+    MODE: NODE_ENV,
+    PORT,
+    DB_URL,
+    DB_NAME,
+  };
 }

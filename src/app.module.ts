@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validateENV } from './utils/validate-env';
-import { UserController } from './user/user.controller';
+import { MongooseModule } from '@nestjs/mongoose';
+import { IEnvironment } from './types/global';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -9,7 +11,16 @@ import { UserController } from './user/user.controller';
       isGlobal: true,
       validate: validateENV,
     }),
+    MongooseModule.forRootAsync({
+      useFactory: (configservice: ConfigService<IEnvironment, true>) => {
+        return {
+          uri: configservice.get('DB_URL', { infer: true }),
+          dbName: configservice.get('DB_NAME', { infer: true }),
+        };
+      },
+      inject: [ConfigService],
+    }),
+    UserModule,
   ],
-  controllers: [UserController],
 })
 export class AppModule {}
