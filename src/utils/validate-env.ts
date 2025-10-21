@@ -1,7 +1,7 @@
 import { plainToInstance } from 'class-transformer';
 import {
   IsEnum,
-  IsNumber,
+  IsInt,
   IsString,
   Max,
   Min,
@@ -14,7 +14,7 @@ class EnvironmentVariables {
   @IsEnum(AppModes)
   NODE_ENV: AppModes;
 
-  @IsNumber()
+  @IsInt()
   @Min(0)
   @Max(65535)
   PORT: number;
@@ -26,6 +26,10 @@ class EnvironmentVariables {
   @IsString()
   @MinLength(2)
   DB_NAME: string;
+
+  @IsInt()
+  @Min(0)
+  SALT_WORK_FACTOR: number;
 }
 
 export function validateENV(config: Record<string, unknown>) {
@@ -40,11 +44,12 @@ export function validateENV(config: Record<string, unknown>) {
     throw new Error(errors.toString());
   }
 
-  const { NODE_ENV, PORT, DB_URL, DB_NAME } = validatedConfig;
+  const { NODE_ENV, PORT, DB_URL, DB_NAME, SALT_WORK_FACTOR } = validatedConfig;
   return {
     MODE: NODE_ENV,
     PORT,
     DB_URL,
     DB_NAME,
+    SALT_WORK_FACTOR,
   };
 }

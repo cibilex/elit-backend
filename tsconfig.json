@@ -16,6 +16,7 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
     "strictBindCallApply": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "typeRoots": ["dependencies/nodejs/node_modules/@types/**/index.d.ts"]
   }
 }

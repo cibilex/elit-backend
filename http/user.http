@@ -2,7 +2,7 @@
 @baseUrl = http://localhost:6000/api/v1/user
 
 ###
-GET {{baseUrl}}?username="ahmet" HTTP/1.1
+GET {{baseUrl}}?username=cibilex HTTP/1.1
 
 
 ###
@@ -10,8 +10,8 @@ POST {{baseUrl}} HTTP/1.1
 Content-Type: application/json
 
 {
-    "username":"cibilex",
+    "username":"asdasd",
     "password":"cibilex",
-    "permissions":21,
+    "permissions":3,
     "userType":1
 }

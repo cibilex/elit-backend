@@ -74,7 +74,6 @@ export class ResponseInterceptor<T> implements NestInterceptor<T> {
     res: FastifyReply,
     req: FastifyRequest,
   ) {
-    console.log('hihihihi');
     this.writeLog(req, res, data);
 
     return {

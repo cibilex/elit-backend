@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from './schema/user.schema';
+import { User } from './schema/user.schema';
 import { FilterQuery, Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserDto } from './dto/get-users.dto';
+import { IUser, IUserDocument } from 'src/user.types';
 
 @Injectable()
 export class UserService {
@@ -11,20 +12,26 @@ export class UserService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
-  private getUserQuery({ username, isDeleted }: Partial<UserDocument>) {
-    const q: FilterQuery<UserDocument> = {};
+  private getUserQuery({
+    username,
+    isDeleted,
+    userType,
+  }: Partial<IUserDocument>) {
+    const q: FilterQuery<IUserDocument> = {};
     if (username) q.username = username;
-    else if (typeof isDeleted === 'boolean') q.isDeleted = isDeleted;
+    if (typeof isDeleted === 'boolean') q.isDeleted = isDeleted;
+    if (userType) q.userType = userType;
+
     return q;
   }
 
-  async getUser(query: Partial<UserDocument>): Promise<User>;
+  async getUser(query: Partial<IUserDocument>): Promise<User>;
   async getUser(
-    query: Partial<UserDocument>,
+    query: Partial<IUserDocument>,
     silent: true,
   ): Promise<User | undefined>;
   async getUser(
-    query: Partial<UserDocument>,
+    query: Partial<IUserDocument>,
     silent?: true,
   ): Promise<User | undefined> {
     const user = await this.userModel.findOne(this.getUserQuery(query)).lean();
@@ -35,13 +42,12 @@ export class UserService {
     return user;
   }
 
-  async insertUser(body: CreateUserDto): Promise<User> {
+  async insertUser(body: CreateUserDto): Promise<IUser<'api'>> {
     try {
-      const createdUser = new this.userModel(body);
-      console.log(createdUser, 'createdUser');
-      const res = await createdUser.save();
-      console.log(res, 'res');
-      return createdUser;
+      const newUser = new this.userModel(body);
+      const createdUser = await newUser.save();
+
+      return this.formatUserToRes(createdUser);
     } catch (err) {
       Logger.error(err);
       throw new BadRequestException('An error accured while creating user');
@@ -66,6 +72,22 @@ export class UserService {
 
   async getUsers(query: GetUserDto) {
     const users = await this.userModel.find(this.getUserQuery(query)).lean();
-    return users;
+    return users.map((user) => this.formatUserToRes(user));
+  }
+
+  private formatUserToRes({
+    _id,
+    username,
+    userType,
+    isDeleted,
+    permissions,
+  }: IUserDocument | IUser<'db'>): IUser<'api'> {
+    return {
+      id: _id.toString(),
+      username,
+      userType,
+      isDeleted,
+      permissions,
+    };
   }
 }
