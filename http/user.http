@@ -3,15 +3,16 @@
 
 ###
 GET {{baseUrl}}?username=cibilex HTTP/1.1
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGY3NDE5MjlmYjc0Yzg1OWVmZDg0MzAiLCJpYXQiOjE3NjEwNDAxMzYsImV4cCI6MTc2MTEyNjUzNn0.NyHM-YL2JSji7xzlCew70WWqp5CRhxFJpkmj_QqKPdc
 
 ###
 POST {{baseUrl}} HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGY3NTk2YTYzOTRlMzkxMGY1NjgyYWQiLCJpYXQiOjE3NjEwNDA3NTIsImV4cCI6MTc2MTEyNzE1Mn0.hkdu4Y1ygWVJdDq7ecne0zpxOApccn_LiJURCdBbojY
 
 {
-    "username":"asdasd",
+    "username":"213",
     "password":"cibilex",
-    "permissions":3,
+    "permissions":2,
     "userType":1
 }

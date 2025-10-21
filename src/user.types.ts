@@ -22,3 +22,5 @@ export type IUser<T extends 'api' | 'db'> = T extends 'api'
     };
 
 export type IUserDocument = HydratedDocument<IUser<'db'>>;
+
+export type IReqUser = Pick<IUser<'db'>, '_id' | 'userType' | 'permissions'>;

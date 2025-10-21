@@ -4,7 +4,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IEnvironment } from './types/global';
 import { ResponseInterceptor } from './utils/response-interceptor';
@@ -46,7 +46,7 @@ async function bootstrap() {
 
 bootstrap()
   .then(() => {
-    console.log('app is listening on ');
+    Logger.log('app successfully started ');
   })
   .catch((err) => {
     console.error(err);

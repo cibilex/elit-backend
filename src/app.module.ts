@@ -4,6 +4,8 @@ import { validateENV } from './utils/validate-env';
 import { MongooseModule } from '@nestjs/mongoose';
 import { IEnvironment } from './types/global';
 import { V1Module } from './v1/v1.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
 
 @Module({
   imports: [
@@ -21,6 +23,12 @@ import { V1Module } from './v1/v1.module';
       inject: [ConfigService],
     }),
     V1Module,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
   ],
 })
 export class AppModule {}

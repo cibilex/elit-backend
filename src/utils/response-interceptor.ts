@@ -62,6 +62,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T> {
     const response = {
       success: false,
       message: this.getErrorMessage(error),
+      status: res.statusCode,
     };
 
     this.writeLog(req, res, response, err);
