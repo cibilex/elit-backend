@@ -1,16 +1,25 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  OnApplicationBootstrap,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/user.schema';
 import { FilterQuery, Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserDto } from './dto/get-users.dto';
-import { IUser, IUserDocument } from 'src/user.types';
+import { IUser, IUserDocument, UserTypes } from 'src/user.types';
 import { validateObjectId } from 'src/utils/db.utils';
+import { ConfigService } from '@nestjs/config';
+import { IEnvironment } from 'src/types/global';
+import { PREDEFINED_PERMISSIONS } from 'src/constants/permissions.constants';
 
 @Injectable()
-export class UserService {
+export class UserService implements OnApplicationBootstrap {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
+    private readonly configService: ConfigService<IEnvironment, true>,
   ) {}
 
   private getUserQuery({
@@ -95,5 +104,33 @@ export class UserService {
       isDeleted,
       permissions,
     };
+  }
+
+  async onApplicationBootstrap() {
+    const username = this.configService.get('ADMIN.ADMIN_NAME', {
+      infer: true,
+    });
+
+    const existed = await this.getUser({ username }, true);
+    if (existed) {
+      Logger.warn('[onApplicationBootstrap] > Admin user is created already.');
+      return;
+    }
+
+    try {
+      await this.createUser({
+        username,
+        password: this.configService.get('ADMIN.ADMIN_PASSWORD', {
+          infer: true,
+        }),
+        permissions: PREDEFINED_PERMISSIONS[UserTypes.ADMIN],
+        userType: UserTypes.ADMIN,
+      });
+      Logger.warn(
+        '[onApplicationBootstrap] > Admin user is created successfully.',
+      );
+    } catch (err) {
+      Logger.error(err);
+    }
   }
 }

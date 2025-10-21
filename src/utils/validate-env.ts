@@ -37,6 +37,14 @@ class EnvironmentVariables {
 
   @IsInt()
   JWT_EXPIRES_IN: number;
+
+  @IsString()
+  @MinLength(5)
+  ADMIN_NAME: string;
+
+  @IsString()
+  @MinLength(5)
+  ADMIN_PASSWORD: string;
 }
 
 export function validateENV(config: Record<string, unknown>) {
@@ -59,6 +67,8 @@ export function validateENV(config: Record<string, unknown>) {
     SALT_WORK_FACTOR,
     JWT_SECRET_KEY,
     JWT_EXPIRES_IN,
+    ADMIN_NAME,
+    ADMIN_PASSWORD,
   } = validatedConfig;
   return {
     MODE: NODE_ENV,
@@ -69,6 +79,10 @@ export function validateENV(config: Record<string, unknown>) {
     JWT: {
       JWT_EXPIRES_IN,
       JWT_SECRET_KEY,
+    },
+    ADMIN: {
+      ADMIN_NAME,
+      ADMIN_PASSWORD,
     },
   };
 }
