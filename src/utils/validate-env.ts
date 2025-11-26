@@ -2,6 +2,7 @@ import { plainToInstance } from 'class-transformer';
 import {
   IsEnum,
   IsInt,
+  IsOptional,
   IsString,
   Max,
   Min,
@@ -45,6 +46,14 @@ class EnvironmentVariables {
   @IsString()
   @MinLength(5)
   ADMIN_PASSWORD: string;
+
+  @IsString()
+  @IsOptional()
+  ECS_CONTAINER_METADATA_URI_V4: string;
+
+  @IsString()
+  @IsOptional()
+  ECS_CONTAINER_METADATA_URI: string;
 }
 
 export function validateENV(config: Record<string, unknown>) {
@@ -69,6 +78,8 @@ export function validateENV(config: Record<string, unknown>) {
     JWT_EXPIRES_IN,
     ADMIN_NAME,
     ADMIN_PASSWORD,
+    ECS_CONTAINER_METADATA_URI_V4,
+    ECS_CONTAINER_METADATA_URI,
   } = validatedConfig;
   return {
     MODE: NODE_ENV,
@@ -84,5 +95,7 @@ export function validateENV(config: Record<string, unknown>) {
       ADMIN_NAME,
       ADMIN_PASSWORD,
     },
+    ECS_CONTAINER_METADATA_URI:
+      ECS_CONTAINER_METADATA_URI_V4 || ECS_CONTAINER_METADATA_URI,
   };
 }

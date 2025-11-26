@@ -1,0 +1,8 @@
+
+@baseUrl = http://localhost:6000/api/v1/health
+
+###
+GET {{baseUrl}} HTTP/1.1
+
+#####
+GET {{baseUrl}}/task HTTP/1.1
