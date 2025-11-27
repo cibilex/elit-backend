@@ -14,8 +14,6 @@ jobs:
       - name: print env
         run: echo $MY_ENV
       - name: print my environment
-        run: echo ${{env.MY_ENV_NAME}}
+        run: echo ${{vars.MY_ENV_NAME}}
       - name: print my secret
         run: echo ${{secrets.MY_SECRET_NAME}}
-      - name: run build
-        run: npm run build
