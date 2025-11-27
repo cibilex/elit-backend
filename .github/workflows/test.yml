@@ -7,12 +7,14 @@ jobs:
     environment: ${{ github.ref_name }}
     runs-on: ubuntu-latest
     env:
-      MY_ENV: MY custom env variablee
+      HARDCODED_ENV: MY custom env variablee
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: print env
-        run: echo $MY_ENV
+      - name: environment is
+        run: echo ${{github.ref_name}}
+      - name: print hardcoded environment
+        run: echo ${{ env.HARDCODED_ENV }}
       - name: print my environment
         run: echo ${{ vars.MY_ENV_NAME }}
       - name: print my secret
