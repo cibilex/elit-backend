@@ -4,7 +4,7 @@ on:
   pull_request:
 jobs:
   lint-and-build:
-    environment: ${{github.ref_name}}
+    environment: ${{ github.ref_name }}
     runs-on: ubuntu-latest
     env:
       MY_ENV: MY custom env variablee
@@ -14,6 +14,6 @@ jobs:
       - name: print env
         run: echo $MY_ENV
       - name: print my environment
-        run: echo ${{vars.MY_ENV_NAME}}
+        run: echo ${{ vars.MY_ENV_NAME }}
       - name: print my secret
-        run: echo ${{secrets.MY_SECRET_NAME}}
+        run: echo ${{ secrets.MY_SECRET_NAME }}
