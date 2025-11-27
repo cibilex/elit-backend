@@ -13,6 +13,6 @@ jobs:
       - name: print env
         run: echo $MY_ENV
       - name: print env
-        run: echo {{env.MY_ENV}}
+        run: echo ${{env.MY_ENV}}
       - name: run build
         run: npm run build
