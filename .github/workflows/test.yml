@@ -5,6 +5,8 @@ on:
 jobs:
   lint-and-build:
     runs-on: ubuntu-latest
+    env:
+      MY_ENV: MY custom env variablee
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -18,5 +20,9 @@ jobs:
         run: npm run lint
       - name: run tests
         run: npm run test
+      - name: print env
+        run: echo $MY_ENV
+      - name: print env
+        run: echo {{env.MY_ENV}}
       - name: run build
         run: npm run build
