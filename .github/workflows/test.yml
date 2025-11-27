@@ -1,24 +1,21 @@
-name: lint and build
+name: Check whether the pr is ready to merge
 on:
-  push:
-    branches:
-      - dev
-      - prod
   pull_request:
 jobs:
-  lint-and-build:
-    environment: ${{ github.ref_name }}
+  check-pr:
     runs-on: ubuntu-latest
-    env:
-      HARDCODED_ENV: MY custom env variablee
     steps:
-      - name: Checkout code
+      - name: checkout code
         uses: actions/checkout@v2
-      - name: environment is
-        run: echo ${{github.ref_name}}
-      - name: print hardcoded environment
-        run: echo ${{ env.HARDCODED_ENV }}
-      - name: print my environment
-        run: echo ${{ vars.MY_ENV_NAME }}
-      - name: print my secret
-        run: echo ${{ secrets.MY_SECRET_NAME }}
+      - name: install node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 23.10.0
+      - name: install dependencies
+        run: npm install --only=production --legacy-peer-deps
+      - name: run lint
+        run: npm run lint
+      - name: run tests
+        run: npm run test
+      - name: build the application
+        run: npm run build
