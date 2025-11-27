@@ -1,6 +1,9 @@
 name: lint and build
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - dev
+      - prod
   pull_request:
 jobs:
   lint-and-build:
