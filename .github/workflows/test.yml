@@ -16,9 +16,12 @@ jobs:
       - name: Configure AWS 
         uses: aws-actions/configure-aws-credentials@v5.1.1
         with:
-          aws-region: ${{ vars.AWS_REGION }} # Europe (Frankfurt))
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          role-session-name: ${{ vars.AWS_SESSION_NAME }}
+          aws-region: ${{ vars.AWS_REGION }} # Europe (Frankfurt)). Region is mandatory
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }} # this should came from secrets.
+          role-session-name: ${{ vars.AWS_SESSION_NAME }} # is optiona, by default it is "GitHubActions"
       - name: log aws credentials
         run: |
-          aws sts get-caller-identity
+          aws sts get-caller-identity ## logs the aws credentials
+      - name: list aws buckets
+        run: |
+          aws s3 ls
