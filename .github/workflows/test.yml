@@ -35,11 +35,11 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
       - name: prepare environments
         run: |
-          REPO_NAME=${GITHUB_REPOSITORY#*/}
-          COMMIT_HASH=${git rev-parse --short $GITHUB_SHA}
-          echo "repo name is $REPO_NAME"
-          echo "commit hash is $COMMIT_HASH"
-          echo "repo owner is $GITHUB_REPOSITORY_OWNER"
-          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
-          echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
-          echo "REPO_OWNER=$GITHUB_REPOSITORY_OWNER" >> $GITHUB_ENV
+          echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+          echo "OWNER_NAME=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
+          echo "COMMIT_HASH=${git rev-parse --short $GITHUB_SHA}" >> $GITHUB_ENV
+      - name: log environments
+        run: |
+          echo "REPO_NAME is $REPO_NAME"
+          echo "OWNER_NAME is $OWNER_NAME"
+          echo "COMMIT_HASH is $COMMIT_HASH"
