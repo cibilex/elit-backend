@@ -3,7 +3,7 @@
 ####################################################################################
 # - $ECR_REPOSITORY:
 #     This must be the full AWS ECR URI:
-#     Example: 123456789012.dkr.ecr.eu-central-1.amazonaws.com/transport-service
+#     Example: 123123123.dkr.ecr.eu-centra-1.amazonaws.com/cibilex
 #     (AWS Console → ECR → Repositories → Your Repository → "URI")
 #     → The repository MUST already exist in AWS ECR before pushing.
 #
@@ -29,8 +29,8 @@ on:
       - dev
 
 permissions:
-  id-token: write     # Required for GitHub → AWS OIDC authentication
-  contents: read      # Required for checkout
+  id-token: write # Required for GitHub → AWS OIDC authentication
+  contents: read # Required for checkout
 
 jobs:
   test-aws:
@@ -50,7 +50,7 @@ jobs:
       - name: set up node
         uses: actions/setup-node@v4
         with:
-          node-version: '23'
+          node-version: "23"
 
       # ----------------------------------------
       # Install, build, test
@@ -88,7 +88,7 @@ jobs:
           ECR_REPOSITORY: "${{ secrets.ECR_REPOSITORY }}"
         run: |
           REPO_NAME=${GITHUB_REPOSITORY#*/}   # Extract repo name
-          COMMIT_HASH=$(git rev-parse --short $GITHUB_SHA)
+          COMMIT_HASH=$(git rev-parse --short $GITHUB_SHA) # extract commit short id
 
           DOCKER_LATEST_VERSION_ID=${ECR_REPOSITORY}:${COMMIT_HASH}
           DOCKER_LATEST_VERSION_TAG=${ECR_REPOSITORY}:latest
@@ -113,7 +113,9 @@ jobs:
       # ----------------------------------------
       - name: build docker image
         run: |
-          docker build -t $DOCKER_LATEST_VERSION_ID -t $DOCKER_LATEST_VERSION_TAG .
+          docker build \
+            -t $DOCKER_LATEST_VERSION_ID \
+            -t $DOCKER_LATEST_VERSION_TAG .
 
       # ----------------------------------------
       # 6. Side check: List images
