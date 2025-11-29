@@ -13,15 +13,33 @@ jobs:
     environment: ${{github.ref_name}}
     runs-on: ubuntu-latest
     steps:
-      - name: log repo info
-        run: echo ${{github.repository}}
-      - name: log repository name
+      - name: checkout code
+        uses: actions/checkout@v4
+      - name: set up node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23'
+      - name: install dependencies
+        run: npm install --legacy-peer-deps
+      - name: build project
+        run: npm run build
+      - name: run tests
+        run: npm run test
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: ${{ vars.AWS_SESSION_NAME }}
+      - name: login to ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: prepare environments
         run: |
-          REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          echo "Repo name in this step: $REPO_NAME"
+          REPO_NAME=${GITHUB_REPOSITORY#*/}
+          COMMIT_HASH=${git rev-parse --short $GITHUB_SHA}
+          echo "repo name is $REPO_NAME"
+          echo "commit hash is $COMMIT_HASH"
+          echo "repo owner is $GITHUB_REPOSITORY_OWNER"
           echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
-      - name: log repository owner
-        run: echo ${{github.repository_owner}}
-      - name: log repository owner with bash
-        run: |
-          echo $GITHUB_REPOSITORY_OWNER
+          echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
+          echo "REPO_OWNER=$GITHUB_REPOSITORY_OWNER" >> $GITHUB_ENV
