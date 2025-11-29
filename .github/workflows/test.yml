@@ -18,7 +18,7 @@ jobs:
       - name: log repository name
         run: |
           echo REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          echo repo name is $REPO_NAME
+          echo repo name is "$REPO_NAME"
           echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
       - name: log repository owner
         run: echo ${{github.repository_owner}}
