@@ -13,18 +13,14 @@ jobs:
     environment: ${{github.ref_name}}
     runs-on: ubuntu-latest
     steps:
-      - name: Configure AWS 
-        uses: aws-actions/configure-aws-credentials@v5.1.1
-        with:
-          aws-region: ${{ vars.AWS_REGION }} # Europe (Frankfurt)). Region is mandatory
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }} # this should came from secrets.
-          role-session-name: ${{ vars.AWS_SESSION_NAME }} # is optiona, by default it is "GitHubActions"
-      - name: log aws credentials
+      - name: log repo info
+        run: echo ${{github.repository}}
+      - name: log repository name
         run: |
-          aws sts get-caller-identity ## logs the aws credentials
-      - name: list aws buckets
+          echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+          echo $REPO_NAME
+      - name: log repository owner
+        run: echo ${{github.repository_owner}}
+      - name: log repository owner with bash
         run: |
-          aws s3 ls
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+          echo $GITHUB_REPOSITORY_OWNER
