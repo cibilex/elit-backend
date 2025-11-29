@@ -34,12 +34,22 @@ jobs:
       - name: login to ecr
         uses: aws-actions/amazon-ecr-login@v2
       - name: prepare environments
+        env:
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         run: |
-          echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-          echo "OWNER_NAME=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
-          echo "COMMIT_HASH=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
-      - name: log environments
+          REPO_NAME=${GITHUB_REPOSITORY#*/}
+          COMMIT_HASH=$(git rev-parse --short $GITHUB_SHA)
+          DOCKER_LATEST_VERSION_ID=${ECR_REPOSITORY}:${COMMIT_HASH}
+          DOCKER_LATEST_VERSION_TAG=${ECR_REPOSITORY}:${REPO_NAME}
+          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
+          echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
+          echo "DOCKER_LATEST_VERSION_ID=$DOCKER_LATEST_VERSION_ID" >> $GITHUB_ENV
+          echo "DOCKER_LATEST_VERSION_TAG=$DOCKER_LATEST_VERSION_TAG" >> $GITHUB_ENV
+      - name: log prepared environments
         run: |
           echo "REPO_NAME is $REPO_NAME"
-          echo "OWNER_NAME is $OWNER_NAME"
           echo "COMMIT_HASH is $COMMIT_HASH"
+          echo "DOCKER_LATEST_VERSION_ID is $DOCKER_LATEST_VERSION_ID"
+          echo "DOCKER_LATEST_VERSION_TAG is $DOCKER_LATEST_VERSION_TAG"
+
+        
