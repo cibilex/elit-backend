@@ -12,8 +12,6 @@ export class UserController {
   @Auth([PERMISSIONS.CREATE_USER])
   @Post()
   createUser(@Body() body: CreateUserDto) {
-    console.log('hi');
-
     return this.userService.createUser(body);
   }
 
