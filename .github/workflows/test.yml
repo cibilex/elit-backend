@@ -40,7 +40,7 @@ jobs:
           REPO_NAME=${GITHUB_REPOSITORY#*/}
           COMMIT_HASH=$(git rev-parse --short $GITHUB_SHA)
           DOCKER_LATEST_VERSION_ID=${ECR_REPOSITORY}:${COMMIT_HASH}
-          DOCKER_LATEST_VERSION_TAG=${ECR_REPOSITORY}:${REPO_NAME}
+          DOCKER_LATEST_VERSION_TAG=${ECR_REPOSITORY}:latest
           echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
           echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
           echo "DOCKER_LATEST_VERSION_ID=$DOCKER_LATEST_VERSION_ID" >> $GITHUB_ENV
@@ -51,5 +51,14 @@ jobs:
           echo "COMMIT_HASH is $COMMIT_HASH"
           echo "DOCKER_LATEST_VERSION_ID is $DOCKER_LATEST_VERSION_ID"
           echo "DOCKER_LATEST_VERSION_TAG is $DOCKER_LATEST_VERSION_TAG"
+      - name: build docker image
+        run: |
+          docker build -t $DOCKER_LATEST_VERSION_ID  -t $DOCKER_LATEST_VERSION_TAG .
+      - name: list docker image
+        env:
+         ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+        run: |
+          docker images | grep $ECR_REPOSITORY
+
 
         
