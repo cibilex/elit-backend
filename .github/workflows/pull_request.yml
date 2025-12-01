@@ -1,0 +1,22 @@
+name: Validate pull request agility
+on:
+  pull_request:
+
+jobs:
+  validate-pull-request: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '23'
+      - name: install dependencies
+        run: npm install --legacy-peer-deps
+      - name: lint project
+        run: npm run lint
+      - name: build project
+        run: npm run build
+      - name: run tests
+        run: npm run test
