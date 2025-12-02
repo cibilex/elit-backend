@@ -63,3 +63,8 @@ jobs:
         env:
           ECR_REPOSITORY: "${{ secrets.ECR_REPOSITORY }}"          
         run: docker images | grep $ECR_REPOSITORY
+      - name: push docker image
+        env:
+          ECR_REPOSITORY: "${{ secrets.ECR_REPOSITORY }}"          
+        run: docker push $ECR_REPOSITORY  --all-tags 
+        
