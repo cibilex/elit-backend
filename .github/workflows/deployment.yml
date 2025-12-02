@@ -21,3 +21,11 @@ jobs:
         run: npm run build
       - name: test project
         run: npm run test
+      - name: Configure AWS Credentials for China region audience
+        uses: aws-actions/configure-aws-credentials@v5.1.1
+        with:
+          aws-region: ${{vars.AWS_REGION}}
+          role-to-assume: ${{secrets.AWS_ROLE_ARN}}
+          role-session-name: ${{vars.AWS_ROLE_SESSION_NAME}}
+      - name: log role
+        run: aws sts get-caller-identity
