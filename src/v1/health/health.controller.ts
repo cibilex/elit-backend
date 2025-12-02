@@ -10,7 +10,7 @@ export class HealthController {
   getHealth() {
     return {
       status: 'ok',
-      message: 'Server is running as expected :)',
+      message: 'AA Server is running as expected :)',
     };
   }
 
