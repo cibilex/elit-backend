@@ -25,9 +25,7 @@ jobs:
         run: npm run build
       - name: test project
         run: npm run test
-      - name: log environment
-        run:  echo 
-      - name: Configure AWS Credentials for China region audience
+      - name: Configure AWS Credentials 
         uses: aws-actions/configure-aws-credentials@v5.1.1
         with:
           aws-region: ${{vars.AWS_REGION}}
