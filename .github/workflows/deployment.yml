@@ -29,3 +29,33 @@ jobs:
           role-session-name: ${{vars.AWS_ROLE_SESSION_NAME}}
       - name: log role
         run: aws sts get-caller-identity
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Prepare dynamic environment variables
+        env:
+          ECR_REPOSITORY: "${{ secrets.ECR_REPOSITORY }}"
+        run: |
+          REPO_NAME=${GITHUB_REPOSITORY#*/}           # Extract repository name
+          COMMIT_HASH=$(git rev-parse --short $GITHUB_SHA) # Short commit hash
+
+          DOCKER_LATEST_VERSION_ID=${ECR_REPOSITORY}:${COMMIT_HASH} # Commit tag
+          DOCKER_LATEST_VERSION_TAG=${ECR_REPOSITORY}:latest         # Latest tag
+
+          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
+          echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
+          echo "DOCKER_LATEST_VERSION_ID=$DOCKER_LATEST_VERSION_ID" >> $GITHUB_ENV
+          echo "DOCKER_LATEST_VERSION_TAG=$DOCKER_LATEST_VERSION_TAG" >> $GITHUB_ENV
+
+      - name: Log prepared environments
+        run: |
+          echo "REPO_NAME = $REPO_NAME"
+          echo "COMMIT_HASH = $COMMIT_HASH"
+          echo "DOCKER_LATEST_VERSION_ID = $DOCKER_LATEST_VERSION_ID"
+          echo "DOCKER_LATEST_VERSION_TAG = $DOCKER_LATEST_VERSION_TAG"
+      - name: build docker image
+        run: docker build -t $DOCKER_LATEST_VERSION_ID -t $DOCKER_LATEST_VERSION_TAG . .
+      - name: log docker image
+        env:
+          ECR_REPOSITORY: "${{ secrets.ECR_REPOSITORY }}"          
+        run: docker images | grep $ECR_REPOSITORY
